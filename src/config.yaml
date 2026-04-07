@@ -1,0 +1,25 @@
+data_load:
+  dataset_csv: "data/cars.csv"
+
+data_cleaning:
+  cleaned_data_path: "data/cleaned.csv"
+
+featurize:
+  features_path: "data/final.csv"
+
+data_split:
+  test_size: 0.3
+  trainset_path: "data/train_cars.csv"
+  testset_path: "data/test_cars.csv"
+
+train:
+  cv: 4
+  model_type: "ridge"
+  alpha: 0.01
+  model_path: "models/cars.joblib"
+  power_path: "models/power.joblib"
+
+test:
+  model_path: "models/cars.joblib"
+  power_path: "models/power.joblib"
+  testset_path: "data/test_cars.csv"
