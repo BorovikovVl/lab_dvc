@@ -1,0 +1,51 @@
+stages:
+  data_cleaning:
+    cmd: python src/stages/data_cleaning.py
+    deps:
+      - src/stages/data_cleaning.py
+      - src/config.yaml
+      - data/cars.csv
+    outs:
+      - data/cleaned.csv
+
+  feature_engineering:
+    cmd: python src/stages/feature_engineering.py
+    deps:
+      - src/stages/feature_engineering.py
+      - src/config.yaml
+      - data/cleaned.csv
+    outs:
+      - data/final.csv
+
+  data_split:
+    cmd: python src/stages/data_split.py
+    deps:
+      - src/stages/data_split.py
+      - src/config.yaml
+      - data/final.csv
+    outs:
+      - data/train_cars.csv
+      - data/test_cars.csv
+
+  train:
+    cmd: python src/stages/train.py
+    deps:
+      - src/stages/train.py
+      - src/config.yaml
+      - data/train_cars.csv
+      - data/test_cars.csv
+    outs:
+      - models/cars.joblib
+      - models/power.joblib
+
+  evaluate:
+    cmd: python src/stages/test_model.py
+    deps:
+      - src/stages/test_model.py
+      - src/config.yaml
+      - models/cars.joblib
+      - models/power.joblib
+      - data/test_cars.csv
+    metrics:
+      - dvclive/metrics.json:
+          cache: false

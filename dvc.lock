@@ -1,0 +1,157 @@
+schema: '2.0'
+stages:
+  prepare_dataset:
+    cmd: python src/stages/prepare_dataset.py
+    deps:
+    - path: src/config.yaml
+      hash: md5
+      md5: 0bcc9702277779e67d13a3e5d229eab3
+      size: 485
+    - path: src/stages/prepare_dataset.py
+      hash: md5
+      md5: d97090c1e17bc47091f8178b7ef34cfd
+      size: 3206
+    outs:
+    - path: ./data/final.csv
+      hash: md5
+      md5: 7852d6b8bd9357d63aece48a66904ce6
+      size: 3058352
+  data_split:
+    cmd: python src/stages/data_split.py
+    deps:
+    - path: data/final.csv
+      hash: md5
+      md5: 1defb2228fc66dca5bc626f8c2a58e4c
+      size: 13883
+    - path: src/config.yaml
+      hash: md5
+      md5: ef7c86ed584e6670e8f062c0024c03b7
+      size: 488
+    - path: src/stages/data_split.py
+      hash: md5
+      md5: 363024358cbda1cbaecc67b5f5b6e09b
+      size: 1102
+    outs:
+    - path: data/test_cars.csv
+      hash: md5
+      md5: f58ad8bb6c9d3acf86964e2208921500
+      size: 4273
+    - path: data/train_cars.csv
+      hash: md5
+      md5: 88999136c8a597b161b62a2dab20c481
+      size: 9739
+  train:
+    cmd: python src/stages/train.py
+    deps:
+    - path: data/test_cars.csv
+      hash: md5
+      md5: f58ad8bb6c9d3acf86964e2208921500
+      size: 4273
+    - path: data/train_cars.csv
+      hash: md5
+      md5: 88999136c8a597b161b62a2dab20c481
+      size: 9739
+    - path: src/config.yaml
+      hash: md5
+      md5: ef7c86ed584e6670e8f062c0024c03b7
+      size: 488
+    - path: src/stages/train.py
+      hash: md5
+      md5: 74b8ee8fc92fd0b91b7a5ea6d44a57e1
+      size: 1603
+    outs:
+    - path: models/cars.joblib
+      hash: md5
+      md5: 0ece8e0567289e16f8f05eb706719471
+      size: 657
+    - path: models/power.joblib
+      hash: md5
+      md5: d735ea2018824e016cdbacdcd67b1b10
+      size: 789
+  test_model:
+    cmd: python src/stages/test_model.py
+    deps:
+    - path: ./models/cars.joblib
+      hash: md5
+      md5: ba57e86411df5d0ec60be8b326620edf
+      size: 1793956533
+    - path: ./models/power.joblib
+      hash: md5
+      md5: da5a0a97917b93d874bffdbc62acb108
+      size: 662
+    - path: src/config.yaml
+      hash: md5
+      md5: 0bcc9702277779e67d13a3e5d229eab3
+      size: 485
+    - path: src/stages/test_model.py
+      hash: md5
+      md5: 0a4ed31f0bc1c59c0f3a507d9e09fbed
+      size: 964
+  data_cleaning:
+    cmd: python src/stages/data_cleaning.py
+    deps:
+    - path: data/cars.csv
+      hash: md5
+      md5: 901075fd71ac9e68d859e538e44d3585
+      size: 8340
+    - path: src/config.yaml
+      hash: md5
+      md5: ef7c86ed584e6670e8f062c0024c03b7
+      size: 488
+    - path: src/stages/data_cleaning.py
+      hash: md5
+      md5: d1d529bf92f7c97df34eb1c451c0cf5c
+      size: 1665
+    outs:
+    - path: data/cleaned.csv
+      hash: md5
+      md5: 068d98d3fa469acd8c6ed195ec831146
+      size: 6471
+  feature_engineering:
+    cmd: python src/stages/feature_engineering.py
+    deps:
+    - path: data/cleaned.csv
+      hash: md5
+      md5: 068d98d3fa469acd8c6ed195ec831146
+      size: 6471
+    - path: src/config.yaml
+      hash: md5
+      md5: ef7c86ed584e6670e8f062c0024c03b7
+      size: 488
+    - path: src/stages/feature_engineering.py
+      hash: md5
+      md5: 2c733f4d3cea8a467a40f6df31c2da62
+      size: 1643
+    outs:
+    - path: data/final.csv
+      hash: md5
+      md5: 1defb2228fc66dca5bc626f8c2a58e4c
+      size: 13883
+  evaluate:
+    cmd: python src/stages/test_model.py
+    deps:
+    - path: data/test_cars.csv
+      hash: md5
+      md5: f58ad8bb6c9d3acf86964e2208921500
+      size: 4273
+    - path: models/cars.joblib
+      hash: md5
+      md5: 0ece8e0567289e16f8f05eb706719471
+      size: 657
+    - path: models/power.joblib
+      hash: md5
+      md5: d735ea2018824e016cdbacdcd67b1b10
+      size: 789
+    - path: src/config.yaml
+      hash: md5
+      md5: ef7c86ed584e6670e8f062c0024c03b7
+      size: 488
+    - path: src/stages/test_model.py
+      hash: md5
+      md5: 344709e934631521dc4d6f77eb2e9083
+      size: 2098
+    outs:
+    - path: dvclive/metrics.json
+      hash: md5
+      md5: 8e437db71a995cac9d739d9e225ac981
+      size: 142
